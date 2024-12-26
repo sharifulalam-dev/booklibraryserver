@@ -19,8 +19,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "test-982fe.web.app",
-      "test-982fe.firebaseapp.com",
+      "https://test-982fe.web.app",
+      "https://test-982fe.firebaseapp.com",
     ],
     credentials: true,
   })
@@ -61,7 +61,11 @@ const verifyToken = (req, res, next) => {
 app.get("/", (req, res) => {
   res.send("Welcome to Bookstore API");
 });
-app.get("/all-books", async (req, res) => {
+app.get("/all-books", verifyToken, async (req, res) => {
+  const userEmail = req.user.email;
+
+  if (req.query.email !== userEmail)
+    return res.status(401).json({ message: "Unauthorized" });
   try {
     const books = await getBooksCollection().find({}).toArray();
     res.status(200).json(books);
@@ -94,7 +98,11 @@ app.get("/book-details/:id", async (req, res) => {
   }
 });
 
-app.post("/addbook", async (req, res) => {
+app.post("/addbook", verifyToken, async (req, res) => {
+  const userEmail = req.user.email;
+  if (req.query.email !== userEmail)
+    return res.status(401).json({ message: "Unauthorized" });
+
   const bookData = req.body;
 
   if (!bookData.name || typeof bookData.quantity !== "number") {
