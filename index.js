@@ -58,12 +58,10 @@ const verifyToken = (req, res, next) => {
     return res.status(401).json({ message: "Unauthorized: Invalid token" });
   }
 };
-
-app.get("/all-books", verifyToken, async (req, res) => {
-  const userEmail = req.user.email;
-
-  if (req.query.email !== userEmail)
-    return res.status(401).json({ message: "Unauthorized" });
+app.get("/", (req, res) => {
+  res.send("Welcome to Bookstore API");
+});
+app.get("/all-books", async (req, res) => {
   try {
     const books = await getBooksCollection().find({}).toArray();
     res.status(200).json(books);
@@ -96,11 +94,7 @@ app.get("/book-details/:id", async (req, res) => {
   }
 });
 
-app.post("/addbook", verifyToken, async (req, res) => {
-  const userEmail = req.user.email;
-  if (req.query.email !== userEmail)
-    return res.status(401).json({ message: "Unauthorized" });
-
+app.post("/addbook", async (req, res) => {
   const bookData = req.body;
 
   if (!bookData.name || typeof bookData.quantity !== "number") {
