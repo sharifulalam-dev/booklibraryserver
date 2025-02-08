@@ -19,8 +19,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://test-982fe.web.app",
-      "https://test-982fe.firebaseapp.com",
+     "https://booklibrary-5b3e5.web.app",
+      "https://https://booklibrary-5b3e5.firebaseapp.com/",
     ],
     credentials: true,
   })
